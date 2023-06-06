@@ -7,7 +7,7 @@ module.exports = {
     },
 
     deleteHouse: (req, res) => {
-        let index = homes.findIndex(item => item.id === req.params.id)
+        let index = homes.findIndex(item => item.id === +req.params.id)
         homes.splice(index, 1)
         res.status(200).send(homes)
     },
@@ -28,6 +28,19 @@ module.exports = {
     updateHouse: (req, res) => {
         let { id } = req.params
         let { type } = req.body
-        let index = homes.findIndex(item => item.id === id)
+        let index = homes.findIndex(item => item.id === +id)
+
+        if (homes[index].price <= 10000 && type === 'minus') {
+            homes[index].price = 0
+            res.status(200).send(homes)
+        } else if (type === 'plus') {
+            homes[index].price += 10000
+            res.status(200).send(homes)
+        } else if (type === 'minus') {
+            homes[index].price -= 10000
+            res.status(200).send(homes)
+        } else {
+            res.sendStatus(400)
+        }
     }
 }
